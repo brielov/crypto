@@ -87,3 +87,40 @@ export async function deriveKey(
     ["encrypt", "decrypt"], // Key usages
   );
 }
+
+/**
+ * Generates a cryptographically secure symmetric secret key for AES-GCM encryption/decryption.
+ *
+ * The key is generated using the Web Crypto API and is suitable for use in encryption and decryption operations.
+ * The key is 256 bits in length, which is considered secure for most applications.
+ *
+ * @returns A Promise that resolves to a `CryptoKey` object representing the generated secret key.
+ *
+ * @example
+ * const key = await generateSecretKey();
+ * console.log(key); // CryptoKey object
+ *
+ * @example
+ * // Using the key for encryption
+ * const data = new TextEncoder().encode("Sensitive data");
+ * const iv = crypto.getRandomValues(new Uint8Array(12)); // Initialization vector
+ * const encrypted = await crypto.subtle.encrypt(
+ *   { name: "AES-GCM", iv },
+ *   key,
+ *   data
+ * );
+ * console.log(encrypted); // Encrypted data as an ArrayBuffer
+ */
+export async function generateSecretKey(): Promise<CryptoKey> {
+  // Generate a symmetric AES key with a length of 256 bits
+  const key = await crypto.subtle.generateKey(
+    {
+      name: "AES-GCM",
+      length: 256,
+    },
+    true,
+    ["encrypt", "decrypt"], // Key usages
+  );
+
+  return key;
+}
